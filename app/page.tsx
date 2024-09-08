@@ -1,4 +1,6 @@
 'use client'
+import EmailList from './Componets/emailList';
+
 
 import React from 'react';
 import { 
@@ -13,12 +15,17 @@ import {
   CardMedia,
   CardContent,
   IconButton,
-  Link as MuiLink
+  Link as MuiLink,
+  Paper,
+  Avatar,
+  Rating,
+  
 } from '@mui/material';
 import { Facebook, Twitter, Instagram, YouTube } from '@mui/icons-material';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import Carousel from 'react-material-ui-carousel';
 
 const navItems = ['Lakeway'];
 const menuItems = [''];
@@ -39,6 +46,42 @@ const featuredItems = [
     name: "Sourdough Bread", 
     image: "https://images.unsplash.com/photo-1585478259715-876a6a81fc08?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8c291cmRvdWdoJTIwYnJlYWR8ZW58MHx8MHx8fDA%3D" 
   },
+];
+
+const newsItems = [
+  {
+    title: "New Summer Menu",
+    content: "Check out our refreshing new summer treats, available now!",
+    date: "June 1, 2023"
+  },
+  {
+    title: "Baking Classes",
+    content: "Join our weekend baking classes. Learn from our master bakers!",
+    date: "May 15, 2023"
+  },
+  {
+    title: "Holiday Pre-orders",
+    content: "Start placing your holiday pre-orders now. Limited slots available!",
+    date: "May 1, 2023"
+  }
+];
+
+const reviews = [
+  {
+    id: 1,
+    name: "John Doe",
+    avatar: "https://example.com/avatar1.jpg",
+    rating: 5,
+    comment: "Absolutely delicious cakes! Will definitely order again."
+  },
+  {
+    id: 2,
+    name: "Jane Smith",
+    avatar: "https://example.com/avatar2.jpg",
+    rating: 4,
+    comment: "Great variety and excellent customer service."
+  },
+  // Add more review objects as needed
 ];
 
 export default function Home() {
@@ -190,27 +233,66 @@ export default function Home() {
 
       </Container>
 
-<Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4 }}>        <Link href="/menu" passHref style={{ textDecoration: 'none' }}>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button 
-                  variant="outlined" 
-                  sx={{ 
-                    backgroundColor: 'rgba(219, 43, 57, 1)',
-                    borderColor: '#fff', 
-                    color: '#fff', 
-                    borderRadius: '20px',
-                    fontSize: '3rem',
-                    '&:hover': {
-                      borderColor: '#B0222D',
-                      backgroundColor: 'rgba(219, 43, 57, 0.2)'
-                    }
-                  }}
-                >
-                  ORDER ONLINE
-                </Button>
-              </motion.div>
-            </Link>
-            </Box>
+      <Container maxWidth="lg" sx={{ my: 6 }}>
+        <Typography variant="h4" component="h2" gutterBottom sx={{ textAlign: 'center', fontWeight: 'bold', color: 'black', mb: 4 }}>
+          CUSTOMER REVIEWS
+        </Typography>
+        <Carousel>
+          {reviews.map((review) => (
+            <Paper
+              key={review.id}
+              elevation={3}
+              sx={{
+                p: 4,
+                mx: 2,
+                maxWidth: 600,
+                margin: 'auto',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+              }}
+            >
+              <Avatar
+                src={review.avatar}
+                sx={{ width: 80, height: 80, mb: 2 }}
+              />
+              <Typography variant="h6" component="h3" gutterBottom>
+                {review.name}
+              </Typography>
+              <Rating value={review.rating} readOnly sx={{ mb: 2 }} />
+              <Typography variant="body1" sx={{ fontStyle: 'italic' }}>
+                &quot;{review.comment}&quot;
+              </Typography>
+            </Paper>
+          ))}
+        </Carousel>
+      </Container>
+
+      <Container maxWidth="lg" sx={{ mt: 6, mb: 6 }}>
+        <Typography variant="h4" component="h2" gutterBottom sx={{ textAlign: 'center', fontWeight: 'bold', color: 'black', mb: 4 }}>
+          BAKERY NEWS
+        </Typography>
+        <Grid container spacing={4}>
+          {newsItems.map((item, index) => (
+            <Grid item key={index} xs={12} md={4}>
+              <Paper elevation={3} sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
+                <Typography variant="h6" component="h3" gutterBottom>
+                  {item.title}
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 2, flexGrow: 1 }}>
+                  {item.content}
+                </Typography>
+                <Typography variant="caption" sx={{ alignSelf: 'flex-end' }}>
+                  {item.date}
+                </Typography>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+      <EmailList />
+      
       <Box component={motion.footer}
   initial={{ y: 100 }}
   animate={{ y: 0 }}
