@@ -2,10 +2,20 @@
 
 import React from 'react';
 import { 
-  AppBar, Toolbar, Typography, Button, Card, CardContent, CardMedia, 
-  Grid, Container, Box, Link as MuiLink, InputBase, IconButton
+  Box, 
+  Typography, 
+  Button, 
+  AppBar, 
+  Toolbar,
+  Container,
+  Grid,
+  Card,
+  CardMedia,
+  CardContent,
+  IconButton,
+  Link as MuiLink
 } from '@mui/material';
-import { Search, Person, ShoppingCart, Facebook, Twitter, Instagram, YouTube } from '@mui/icons-material';
+import { Facebook, Twitter, Instagram, YouTube } from '@mui/icons-material';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import {
     Box,
     Typography,
@@ -22,7 +22,7 @@ import {
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useRouter } from 'next/navigation';
-
+import { SelectChangeEvent } from '@mui/material/Select';
 // This should be replaced with actual cart data, possibly from a global state or context
 const sampleCartItems = [
   { id: 1, name: 'Chocolate Cake', price: 25.99, quantity: 2 },
@@ -48,11 +48,19 @@ export default function CheckoutPage() {
     pickupTime: '',
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>) => {
+  const handleTextInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prevData => ({
       ...prevData,
-      [name as string]: value,
+      [name]: value
+    }));
+  };
+
+  const handleSelectChange = (e: SelectChangeEvent) => {
+    const { name, value } = e.target;
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: value
     }));
   };
 
@@ -101,7 +109,7 @@ export default function CheckoutPage() {
                         label="Full Name"
                         name="name"
                         value={formData.name}
-                        onChange={handleInputChange}
+                        onChange={handleTextInputChange}
                       />
                     </Grid>
                     <Grid item xs={12}>
@@ -112,7 +120,7 @@ export default function CheckoutPage() {
                         name="email"
                         type="email"
                         value={formData.email}
-                        onChange={handleInputChange}
+                        onChange={handleTextInputChange}
                       />
                     </Grid>
                     <Grid item xs={12}>
@@ -124,7 +132,7 @@ export default function CheckoutPage() {
                           name="pickupTime"
                           value={formData.pickupTime}
                           label="Pickup Time"
-                          onChange={handleInputChange}
+                          onChange={handleSelectChange}
                         >
                           {pickupTimes.map((time) => (
                             <MenuItem key={time} value={time}>

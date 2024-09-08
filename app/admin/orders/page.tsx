@@ -37,10 +37,20 @@ const mockOrders = [
   { id: 3, customerName: 'Bob Johnson', items: ['Baguette', 'Cheese Danish'], total: 12.75, status: 'ready', pickupTime: '2:45 PM' },
 ];
 
+// Replace 'any' with a more specific type
+type Order = {
+  id: number;
+  customerName: string;
+  items: string[];
+  total: number;
+  status: string;
+  pickupTime: string;
+};
+
 export default function AdminOrdersDashboard() {
   const router = useRouter();
   const [orders, setOrders] = useState(mockOrders);
-  const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   // Simulating real-time updates
   useEffect(() => {
@@ -60,7 +70,7 @@ export default function AdminOrdersDashboard() {
     return () => clearInterval(interval);
   }, [orders]);
 
-  const handleOrderClick = (order: any) => {
+  const handleOrderClick = (order: Order) => {
     setSelectedOrder(order);
   };
 
@@ -114,7 +124,7 @@ export default function AdminOrdersDashboard() {
                   />
                   <Chip 
                     label={order.status} 
-                    color={getStatusColor(order.status) as any}
+                    color={getStatusColor(order.status)}
                     size="small"
                   />
                 </ListItem>
