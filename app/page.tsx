@@ -190,6 +190,7 @@ export default function Home() {
                 >
                   ORDER ONLINE
                 </Button>
+                <Typography sx={{color:'black', textAlign:'center'}} variant="h6"><b>* In-store pickup only</b></Typography>
               </motion.div>
             </Link>
           </Box>
