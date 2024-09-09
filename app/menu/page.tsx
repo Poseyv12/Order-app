@@ -182,7 +182,7 @@ export default function MenuPage() {
       <Box sx={{ flexGrow: 1, display: 'flex', pt: 3 }}>
         {/* Sidebar */}
         <Box sx={{ 
-          width: { xs: '40%', sm: 240 },
+          width: { xs: '25%', sm: 240 },
           flexShrink: 0, 
           bgcolor: 'background.paper', 
           borderRight: 1, 
