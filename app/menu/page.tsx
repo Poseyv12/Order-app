@@ -169,7 +169,7 @@ export default function MenuPage() {
       <Box sx={{ flexGrow: 1, display: 'flex', pt: 3 }}>
         {/* Sidebar */}
         <Box sx={{ 
-          width: 240, 
+          width: { xs: 120, sm: 240 }, // Adjust width based on screen size
           flexShrink: 0, 
           bgcolor: 'background.paper', 
           borderRight: 1, 
@@ -204,6 +204,7 @@ export default function MenuPage() {
                       sx: { 
                         color: category === selectedCategory ? 'white' : 'black',
                         fontWeight: category === selectedCategory ? 'bold' : 'normal',
+                        fontSize: { xs: '0.8rem', sm: '1rem' }, // Adjust font size for mobile
                       } 
                     }}
                   />
