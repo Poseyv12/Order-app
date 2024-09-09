@@ -20,13 +20,11 @@ export default function Footer() {
               Contact Us
             </Typography>
             <Typography variant="body2">
-              123 Bakery Street, Houston, TX 77001
+            1310 Ranch Road 620 South, Suite A01
+Lakeway, Texas, 78734
             </Typography>
             <Typography variant="body2">
-              Email: info@threebrothers.com
-            </Typography>
-            <Typography variant="body2">
-              Phone: (713) 666-2253
+            Call us at 512-820-9008
             </Typography>
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -51,7 +49,7 @@ export default function Footer() {
         </Grid>
         <Box mt={5}>
           <Typography variant="body2" align="center">
-            © {new Date().getFullYear()} Three Brothers Bakery. All rights reserved.
+            © {new Date().getFullYear()} Finery & Cake. All rights reserved.
           </Typography>
         </Box>
       </Container>

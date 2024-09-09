@@ -1,20 +1,15 @@
 'use client'
 
 import React from 'react';
-import { Container, Grid, Card, CardContent } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import {
+  Container, Grid, Card, CardContent, Box, Typography, Paper, AppBar, Toolbar, IconButton, Button
+} from '@mui/material';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import ViewTracker from '../../Componets/viewTracker';
-import { useRouter } from 'next/navigation';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
-import {
-    Box,
-    Typography,
-    Paper,
-    AppBar,
-    Toolbar,
-    IconButton,
-    
-  } from '@mui/material';
 // Mock data for sales
 const salesData = [
   { month: 'Jan', sales: 4000 },
@@ -24,25 +19,32 @@ const salesData = [
   { month: 'May', sales: 6000 },
   { month: 'Jun', sales: 5500 },
 ];
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+
 export default function AdminDashboard() {
   const router = useRouter();
 
   return (
-    
     <Box sx={{ flexGrow: 1, p: 3 }}>
-         <AppBar position="static" sx={{ bgcolor: '#DB2B39' }}>
-          <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-           
-            </Typography>
-            <IconButton color="inherit" onClick={() => router.push('/')}>
-              <ExitToAppIcon />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
+      <AppBar position="static" sx={{ bgcolor: '#DB2B39' }}>
+        <Toolbar>
+          <Typography variant="h6" component="div" sx={{color:'white', flexGrow: 1 }}>
+            Admin Dashboard
+          </Typography>
+          <Button 
+            color="inherit" 
+            startIcon={<ShoppingCartIcon />}
+            onClick={() => router.push('/admin/orders')}
+            sx={{ color:'white',mr: 2 }}
+          >
+            Orders
+          </Button>
+          <IconButton color="inherit" onClick={() => router.push('/')}>
+            <ExitToAppIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
       <Container maxWidth="lg">
-        <Typography sx={{ fontWeight: 'bold', color: 'black', fontSize: '2rem', marginBottom: '2rem' }} variant="h4" gutterBottom>
+        <Typography sx={{ color:'black',fontWeight: 'bold', fontSize: '2rem', marginBottom: '2rem', mt: 3 }} variant="h4" gutterBottom>
           Admin Dashboard
         </Typography>
         <Grid container spacing={3}>

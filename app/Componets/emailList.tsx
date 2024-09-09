@@ -28,7 +28,7 @@ export default function EmailList() {
           onChange={(e) => setEmail(e.target.value)}
           sx={{ mr: 1, mb: { xs: 1, sm: 0 } }}
         />
-        <Button variant="contained" type="submit" sx={{ bgcolor: '#DB2B39',height:'56px' }}>
+        <Button variant="contained" type="submit" sx={{ bgcolor: '#DB2B39',color:'white',height:'56px' }}>
           Subscribe
         </Button>
       </form>

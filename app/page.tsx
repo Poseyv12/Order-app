@@ -115,7 +115,7 @@ export default function Home() {
             </Box>
           </Box>
           <Typography variant="body2">
-            CALL US : 713-666-2253
+            CALL US : 512-820-9008
           </Typography>
     
         </Toolbar>
@@ -165,6 +165,13 @@ export default function Home() {
               borderRadius: '10px'
             }}
           >
+            <Image
+              src="https://fineryandcake.com/cdn/shop/files/3d-black-no-watercolor-web_300x.png?v=1628389180g"
+              alt="Bakery Logo"
+              width={500}
+              height={300}
+              style={{ width: '100%', height: 'auto' }}
+            />
             <Link href="/menu" passHref style={{ textDecoration: 'none' }}>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button 
@@ -314,13 +321,18 @@ export default function Home() {
                 Contact Us
               </Typography>
               <Typography variant="body2">
-                123 Bakery Street, Houston, TX 77001
-              </Typography>
+              1310 Ranch Road 620 South, Suite A01
+Lakeway, Texas, 78734
+              </Typography><br />
               <Typography variant="body2">
-                Email: info@threebrothers.com
-              </Typography>
+              Call us at 512-820-9008
+              </Typography><br />
+
               <Typography variant="body2">
-                Phone: (713) 666-2253
+                HOURS:<br />
+                Tuesday-Friday: 8am-4pm<br />
+                Saturday: 9am-4pm<br />
+                Sunday & Monday: Closed<br />
               </Typography>
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -344,8 +356,7 @@ export default function Home() {
             </Grid>
           </Grid>
           <Box mt={5}>
-            <Typography variant="body2" align="center">
-              © {new Date().getFullYear()} Three Brothers Bakery. All rights reserved.
+            <Typography variant="body2" align="center">Finery & Cake. All rights reserved.
             </Typography>
           </Box>
         </Container>
