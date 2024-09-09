@@ -197,10 +197,16 @@ export default function Home() {
         </Box>
 
         <Box sx={{ bgcolor: '#DB2B39', color: 'white', py: 4, textAlign: 'center', mb: 4 }}>
-          <Typography variant="h4" component="h1" sx={{ fontStyle: 'italic', mb: 2 }}>
+          <Typography variant="h4" component="h1" sx={{ 
+            fontStyle: 'italic', 
+            mb: 2,
+            fontSize: { xs: '1.5rem', sm: '2.125rem' } // Smaller on mobile, default on larger screens
+          }}>
             Shop Our Sweet Treats & Baked Goods Online
           </Typography>
-          <Typography variant="body1">
+          <Typography variant="body1" sx={{
+            fontSize: { xs: '0.875rem', sm: '1rem' } // Smaller on mobile, default on larger screens
+          }}>
             View our menu and order some tasty treats today!
           </Typography>
         </Box>
