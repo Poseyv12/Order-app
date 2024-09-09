@@ -19,6 +19,7 @@ import {
   Badge,
   IconButton,
   Divider,
+  TextField,
 } from '@mui/material';
 import Image from 'next/image';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -26,6 +27,7 @@ import Footer from '../Componets/Footer';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import SearchIcon from '@mui/icons-material/Search';
 // Sample data - replace with your actual menu data
 const categories = ['Cakes', 'Pastries', 'Breads', 'Cookies'];
 import CloseIcon from '@mui/icons-material/Close';
@@ -57,10 +59,21 @@ const menuItems = [
 export default function MenuPage() {
   const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [cartItems, setCartItems] = useState<Array<{ id: number; name: string; price: number; quantity: number }>>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  const filteredItems = menuItems.filter(item => item.category === selectedCategory);
+  const filteredItems = menuItems
+    .filter(item => 
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.category.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .filter(item => !selectedCategory || item.category === selectedCategory);
+
+  const handleCategorySelect = (category: string) => {
+    setSelectedCategory(category);
+    setSearchQuery(''); // Clear search query when selecting a category
+  };
 
   const addToCart = (item: { id: number; name: string; price: number }) => {
     setCartItems(prevItems => {
@@ -169,22 +182,51 @@ export default function MenuPage() {
       <Box sx={{ flexGrow: 1, display: 'flex', pt: 3 }}>
         {/* Sidebar */}
         <Box sx={{ 
-          width: { xs: '25%', md: '240px' }, 
+          width: { xs: '40%', sm: 240 },
           flexShrink: 0, 
           bgcolor: 'background.paper', 
           borderRight: 1, 
           borderColor: 'divider',
           position: 'sticky',
           top: 0,
-          fontSize: { xs: '0.8rem', sm: '1rem' },
-          height: { xs: 'calc(100vh - 56px)', sm: 'calc(100vh - 64px)' },          overflowY: 'auto'
+          height: { xs: 'calc(100vh - 56px)', sm: 'calc(100vh - 64px)' },
+          overflowY: 'auto'
         }}>
           <List>
+            <ListItem disablePadding>
+              <ListItemButton 
+                selected={!selectedCategory}
+                onClick={() => handleCategorySelect('')}
+                sx={{
+                  '&.Mui-selected': {
+                    backgroundColor: '#DB2B39',
+                    color: 'white',
+                    '&:hover': {
+                      backgroundColor: '#B0222D',
+                    },
+                  },
+                  '&:hover': {
+                    backgroundColor: 'rgba(219, 43, 57, 0.08)',
+                  },
+                }}
+              >
+                <ListItemText 
+                  primary="All Categories" 
+                  primaryTypographyProps={{ 
+                    sx: { 
+                      color: !selectedCategory ? 'white' : 'black',
+                      fontWeight: !selectedCategory ? 'bold' : 'normal',
+                      fontSize: { xs: '0.8rem', sm: '1rem' },
+                    } 
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
             {categories.map((category) => (
               <ListItem key={category} disablePadding>
                 <ListItemButton 
                   selected={category === selectedCategory}
-                  onClick={() => setSelectedCategory(category)}
+                  onClick={() => handleCategorySelect(category)}
                   sx={{
                     '&.Mui-selected': {
                       backgroundColor: '#DB2B39',
@@ -204,6 +246,7 @@ export default function MenuPage() {
                       sx: { 
                         color: category === selectedCategory ? 'white' : 'black',
                         fontWeight: category === selectedCategory ? 'bold' : 'normal',
+                        fontSize: { xs: '0.8rem', sm: '1rem' },
                       } 
                     }}
                   />
@@ -215,46 +258,65 @@ export default function MenuPage() {
 
         {/* Menu Items Grid */}
         <Box sx={{ flexGrow: 1, p: 3, overflowY: 'auto' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+            <TextField
+              variant="outlined"
+              size="small"
+              placeholder="Search menu items..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              sx={{ flexGrow: 1, mr: 1 }}
+            />
+            <IconButton>
+              <SearchIcon />
+            </IconButton>
+          </Box>
           <Grid container spacing={3}>
-            {filteredItems.map((item, index) => (
-              <Grid item key={item.id} xs={12} sm={6} md={4}>
-                <motion.div
-                  variants={itemVariants}
-                  initial="hidden"
-                  animate="visible"
-                  custom={index}
-                >
-                  <Card>
-                    <CardMedia
-                      component="div"
-                      sx={{ height: 140, position: 'relative' }}
-                    >
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        layout="fill"
-                        objectFit="cover"
-                      />
-                    </CardMedia>
-                    <CardContent>
-                      <Typography gutterBottom variant="h6" component="div">
-                        {item.name}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        ${item.price.toFixed(2)}
-                      </Typography>
-                      <Button 
-                        variant="contained" 
-                        sx={{ mt: 2, color: 'white', bgcolor: '#DB2B39', '&:hover': { bgcolor: '#B0222D' } }}
-                        onClick={() => addToCart(item)}
+            {filteredItems.length > 0 ? (
+              filteredItems.map((item, index) => (
+                <Grid item key={item.id} xs={12} sm={6} md={4}>
+                  <motion.div
+                    variants={itemVariants}
+                    initial="hidden"
+                    animate="visible"
+                    custom={index}
+                  >
+                    <Card>
+                      <CardMedia
+                        component="div"
+                        sx={{ height: 140, position: 'relative' }}
                       >
-                        Add to Cart
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </motion.div>
+                        <Image
+                          src={item.image}
+                          alt={item.name}
+                          layout="fill"
+                          objectFit="cover"
+                        />
+                      </CardMedia>
+                      <CardContent>
+                        <Typography gutterBottom variant="h6" component="div">
+                          {item.name}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          ${item.price.toFixed(2)}
+                        </Typography>
+                        <Button 
+                          variant="contained" 
+                          sx={{ mt: 2, color: 'white', bgcolor: '#DB2B39', '&:hover': { bgcolor: '#B0222D' } }}
+                          onClick={() => addToCart(item)}
+                        >
+                          Add to Cart
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </Grid>
+              ))
+            ) : (
+              <Grid item xs={12}>
+                <Typography>No items found. Try a different search term or category.</Typography>
               </Grid>
-            ))}
+            )}
           </Grid>
         </Box>
       </Box>
