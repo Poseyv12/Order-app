@@ -169,15 +169,15 @@ export default function MenuPage() {
       <Box sx={{ flexGrow: 1, display: 'flex', pt: 3 }}>
         {/* Sidebar */}
         <Box sx={{ 
-          width: 240, 
+          width: { xs: '40%', md: '240px' }, 
           flexShrink: 0, 
           bgcolor: 'background.paper', 
           borderRight: 1, 
           borderColor: 'divider',
           position: 'sticky',
           top: 0,
-          height: 'calc(100vh - 64px)', // Adjust this value based on your AppBar height
-          overflowY: 'auto'
+          fontSize: { xs: '0.8rem', sm: '1rem' },
+          height: { xs: 'calc(100vh - 56px)', sm: 'calc(100vh - 64px)' },          overflowY: 'auto'
         }}>
           <List>
             {categories.map((category) => (
