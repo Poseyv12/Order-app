@@ -12,6 +12,7 @@ import MenuItemList from './MenuItemList';
 import CartSidebar from './CartSidebar';
 import Footer from '../Componets/Footer';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { useTheme, useMediaQuery } from '@mui/material';
 
 const supabase = createClientComponentClient();
 const categories = ['All Categories', 'Cakes', 'Pastries', 'Breads', 'Cookies'];
@@ -45,6 +46,9 @@ export default function MenuPageContent({ initialMenuItems }: MenuPageContentPro
   const [filteredItems, setFilteredItems] = useState(initialMenuItems);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     const fetchMenuItems = async () => {
@@ -133,7 +137,12 @@ export default function MenuPageContent({ initialMenuItems }: MenuPageContentPro
       </AppBar>
 
       <Box sx={{ display: 'flex', flexGrow: 1 }}>
-        <Paper elevation={3} sx={{ width: '200px', flexShrink: 0, borderRadius: 0 }}>
+        <Paper elevation={3} sx={{ 
+          width: isMobile ? '100px' : '200px', 
+          flexShrink: 0, 
+          borderRadius: 0,
+          overflow: 'auto'
+        }}>
           <List component="nav">
             {categories.map((category) => (
               <ListItem key={category} disablePadding>
@@ -152,9 +161,16 @@ export default function MenuPageContent({ initialMenuItems }: MenuPageContentPro
                         bgcolor: '#B0222D',
                       },
                     },
+                    padding: isMobile ? '8px 4px' : '8px 16px',
                   }}
                 >
-                  <ListItemText primary={category} />
+                  <ListItemText 
+                    primary={category} 
+                    primaryTypographyProps={{
+                      fontSize: isMobile ? '0.8rem' : '1rem',
+                      textAlign: isMobile ? 'center' : 'left',
+                    }}
+                  />
                 </ListItemButton>
               </ListItem>
             ))}

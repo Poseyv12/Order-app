@@ -142,7 +142,11 @@ const MenuItemList = ({ menuItems, onAddToCart, getAvailableQuantity }: MenuItem
           const isDisabled = availableQuantity === 0;
 
           return (
-            <MotionBox gridColumn="span 4" key={item.id} variants={itemVariants}>
+            <MotionBox 
+              gridColumn={{ xs: "span 12", sm: "span 6", md: "span 4" }} 
+              key={item.id} 
+              variants={itemVariants}
+            >
               <MotionStyledCard 
                 disabled={isDisabled}
                 whileHover={{ scale: 1.05 }}
