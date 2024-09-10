@@ -106,7 +106,10 @@ export default function MenuPage() {
   const cartTotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const handleCheckout = () => {
-    router.push('/checkout');
+    // Encode the cart items as a JSON string
+    const encodedCartItems = encodeURIComponent(JSON.stringify(cartItems));
+    // Navigate to the checkout page with the cart items as a query parameter
+    router.push(`/checkout?cartItems=${encodedCartItems}`);
   };
 
   // Animation variants for menu items
@@ -320,7 +323,6 @@ export default function MenuPage() {
                           alt={item.name}
                           layout="fill"
                           objectFit="cover"
-                      
                         />
                       </CardMedia>
                       <CardContent>
@@ -330,10 +332,12 @@ export default function MenuPage() {
                         <Typography variant="body2" color="text.secondary">
                           ${item.price.toFixed(2)}
                         </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                          Available: {item.quantityAvailable}
+                        </Typography>
                         <Button 
                           variant="contained" 
                           sx={{ mt: 2, color: 'white', bgcolor: '#DB2B39', '&:hover': { bgcolor: '#B0222D' } }}
-                          onClick={() => addToCart(item)}
                         >
                           Add to Cart
                         </Button>

@@ -27,7 +27,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import Carousel from 'react-material-ui-carousel';
 
-const navItems = ['Lakeway'];
+const navItems = [''];
 const menuItems = [''];
 
 const featuredItems = [
@@ -107,7 +107,7 @@ export default function Home() {
                   key={item}
                   component={Link}
                   href={`/${item.toLowerCase()}`}
-                  sx={{ color: 'white', mx: 1, textDecoration: 'none', fontSize: '0.8rem' }}
+                  sx={{ color: 'black', mx: 1, textDecoration: 'none', fontSize: '0.8rem' }}
                 >
                   {item}
                 </MuiLink>

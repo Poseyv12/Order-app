@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, useEffect } from 'react';
 import {
     Box,
     Typography,
@@ -21,13 +21,9 @@ import {
     MenuItem,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { SelectChangeEvent } from '@mui/material/Select';
-// This should be replaced with actual cart data, possibly from a global state or context
-const sampleCartItems = [
-  { id: 1, name: 'Chocolate Cake', price: 25.99, quantity: 2 },
-  { id: 2, name: 'Croissant', price: 3.99, quantity: 3 },
-];
+
 // Generate pickup times from 9 AM to 8 PM
 const generatePickupTimes = () => {
     const times = [];
@@ -38,15 +34,29 @@ const generatePickupTimes = () => {
     return times;
   };
   
-  const pickupTimes = generatePickupTimes();
+const pickupTimes = generatePickupTimes();
   
 export default function CheckoutPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [cartItems, setCartItems] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     pickupTime: '',
   });
+
+  useEffect(() => {
+    const cartItemsParam = searchParams.get('cartItems');
+    if (cartItemsParam) {
+      try {
+        const decodedCartItems = JSON.parse(decodeURIComponent(cartItemsParam));
+        setCartItems(decodedCartItems);
+      } catch (error) {
+        console.error('Error parsing cart items:', error);
+      }
+    }
+  }, [searchParams]);
 
   const handleTextInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -72,7 +82,7 @@ export default function CheckoutPage() {
     router.push('/order-success');
   };
 
-  const cartTotal = sampleCartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const cartTotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -162,7 +172,7 @@ export default function CheckoutPage() {
                   Order Summary
                 </Typography>
                 <List>
-                  {sampleCartItems.map((item) => (
+                  {cartItems.map((item) => (
                     <ListItem key={item.id}>
                       <ListItemText
                         primary={item.name}
