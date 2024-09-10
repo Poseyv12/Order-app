@@ -23,6 +23,15 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { SelectChangeEvent } from '@mui/material/Select';
+import { Suspense } from 'react';
+
+// Define an interface for your cart item
+interface CartItem {
+    id: number;
+    name: string;
+    price: number;
+    quantity: number;
+}
 
 // Generate pickup times from 9 AM to 8 PM
 const generatePickupTimes = () => {
@@ -37,9 +46,17 @@ const generatePickupTimes = () => {
 const pickupTimes = generatePickupTimes();
   
 export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CheckoutContent />
+    </Suspense>
+  );
+}
+
+function CheckoutContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -50,7 +67,7 @@ export default function CheckoutPage() {
     const cartItemsParam = searchParams.get('cartItems');
     if (cartItemsParam) {
       try {
-        const decodedCartItems = JSON.parse(decodeURIComponent(cartItemsParam));
+        const decodedCartItems = JSON.parse(decodeURIComponent(cartItemsParam)) as CartItem[];
         setCartItems(decodedCartItems);
       } catch (error) {
         console.error('Error parsing cart items:', error);
@@ -82,7 +99,7 @@ export default function CheckoutPage() {
     router.push('/order-success');
   };
 
-  const cartTotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const cartTotal = cartItems.reduce((sum, item: CartItem) => sum + item.price * item.quantity, 0);
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
