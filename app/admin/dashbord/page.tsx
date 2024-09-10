@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Container, Grid, Card, CardContent, Box, Typography, Paper, AppBar, Toolbar, IconButton, Button
@@ -9,19 +9,61 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import ViewTracker from '../../Componets/viewTracker';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-// Mock data for sales
-const salesData = [
-  { month: 'Jan', sales: 4000 },
-  { month: 'Feb', sales: 3000 },
-  { month: 'Mar', sales: 5000 },
-  { month: 'Apr', sales: 4500 },
-  { month: 'May', sales: 6000 },
-  { month: 'Jun', sales: 5500 },
-];
+type Order = {
+  id: number;
+  created_at: string;
+  total: number;
+  status: string;
+};
+
+type SalesData = {
+  month: string;
+  sales: number;
+};
 
 export default function AdminDashboard() {
   const router = useRouter();
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [salesData, setSalesData] = useState<SalesData[]>([]);
+  const supabase = createClientComponentClient();
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching orders:', error);
+      } else {
+        setOrders(data || []);
+        processOrdersData(data || []);
+      }
+    };
+
+    fetchOrders();
+  }, [supabase]);
+
+  const processOrdersData = (orders: Order[]) => {
+    const monthlySales: { [key: string]: number } = {};
+    orders.forEach(order => {
+      const month = new Date(order.created_at).toLocaleString('default', { month: 'short' });
+      monthlySales[month] = (monthlySales[month] || 0) + order.total;
+    });
+
+    const salesData = Object.entries(monthlySales).map(([month, sales]) => ({
+      month,
+      sales: Number(sales.toFixed(2))
+    }));
+
+    setSalesData(salesData);
+  };
+
+  const totalSales = orders.reduce((sum, order) => sum + order.total, 0);
+  const averageOrderValue = orders.length > 0 ? totalSales / orders.length : 0;
 
   return (
     <Box sx={{ flexGrow: 1, p: 3 }}>
@@ -52,7 +94,7 @@ export default function AdminDashboard() {
             <Card>
               <CardContent>
                 <Typography variant="h6">Total Sales</Typography>
-                <Typography variant="h4">$28,000</Typography>
+                <Typography variant="h4">${totalSales.toFixed(2)}</Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -60,7 +102,7 @@ export default function AdminDashboard() {
             <Card>
               <CardContent>
                 <Typography variant="h6">Orders</Typography>
-                <Typography variant="h4">156</Typography>
+                <Typography variant="h4">{orders.length}</Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -68,7 +110,7 @@ export default function AdminDashboard() {
             <Card>
               <CardContent>
                 <Typography variant="h6">Average Order Value</Typography>
-                <Typography variant="h4">$179.49</Typography>
+                <Typography variant="h4">${averageOrderValue.toFixed(2)}</Typography>
               </CardContent>
             </Card>
           </Grid>

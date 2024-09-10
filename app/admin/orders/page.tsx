@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -21,6 +21,7 @@ import {
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { useRouter } from 'next/navigation';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 const theme = createTheme({
   palette: {
@@ -30,45 +31,48 @@ const theme = createTheme({
   },
 });
 
-// Mock data for orders
-const mockOrders = [
-  { id: 1, customerName: 'John Doe', items: ['Chocolate Cake', 'Croissant'], total: 29.98, status: 'new', pickupTime: '2:30 PM' },
-  { id: 2, customerName: 'Jane Smith', items: ['Vanilla Cupcake', 'Coffee'], total: 8.50, status: 'preparing', pickupTime: '3:00 PM' },
-  { id: 3, customerName: 'Bob Johnson', items: ['Baguette', 'Cheese Danish'], total: 12.75, status: 'ready', pickupTime: '2:45 PM' },
-];
+type CartItem = {
+  id: number;
+  name: string;
+  price: number;
+  quantity: number;
+};
 
-// Replace 'any' with a more specific type
 type Order = {
   id: number;
-  customerName: string;
-  items: string[];
+  customer_name: string;
+  items: CartItem[];
   total: number;
   status: string;
-  pickupTime: string;
+  pickup_time: string;
+  created_at: string;
 };
 
 export default function AdminOrdersDashboard() {
   const router = useRouter();
-  const [orders, setOrders] = useState(mockOrders);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const supabase = createClientComponentClient();
 
-  // Simulating real-time updates
+  const fetchOrders = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .order('created_at', { ascending: false });
+  
+      if (error) throw error;
+      setOrders(data || []);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    }
+  }, [supabase]);
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      // In a real app, you'd fetch new orders from a backend here
-      const newOrder = {
-        id: orders.length + 1,
-        customerName: `Customer ${orders.length + 1}`,
-        items: ['New Item'],
-        total: Math.random() * 50,
-        status: 'new',
-        pickupTime: '4:00 PM',
-      };
-      setOrders(prevOrders => [newOrder, ...prevOrders]);
-    }, 30000); // Add a new order every 30 seconds
-
+    fetchOrders();
+    const interval = setInterval(fetchOrders, 30000); // Fetch orders every 30 seconds
     return () => clearInterval(interval);
-  }, [orders]);
+  }, [fetchOrders]);
 
   const handleOrderClick = (order: Order) => {
     setSelectedOrder(order);
@@ -76,6 +80,20 @@ export default function AdminOrdersDashboard() {
 
   const handleCloseDialog = () => {
     setSelectedOrder(null);
+  };
+
+  const handleStatusChange = async (orderId: number, newStatus: string) => {
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .update({ status: newStatus })
+        .eq('id', orderId);
+
+      if (error) throw error;
+      fetchOrders(); // Refresh orders after update
+    } catch (error) {
+      console.error('Error updating order status:', error);
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -119,8 +137,13 @@ export default function AdminOrdersDashboard() {
                   }}
                 >
                   <ListItemText
-                    primary={`Order #${order.id} - ${order.customerName}`}
-                    secondary={`Total: $${order.total.toFixed(2)} | Pickup: ${order.pickupTime}`}
+                    primary={`Order #${order.id} - ${order.customer_name}`}
+                    secondary={
+                      <>
+                        {`Placed: ${new Date(order.created_at).toLocaleString()} | `}
+                        {`Total: $${order.total.toFixed(2)} | Pickup: ${order.pickup_time}`}
+                      </>
+                    }
                   />
                   <Chip 
                     label={order.status} 
@@ -134,23 +157,44 @@ export default function AdminOrdersDashboard() {
         </Box>
       </Box>
 
-      <Dialog  fullWidth open={!!selectedOrder} onClose={handleCloseDialog}>
+      <Dialog fullWidth open={!!selectedOrder} onClose={handleCloseDialog}>
         <DialogTitle>Order Details</DialogTitle>
         <DialogContent>
           {selectedOrder && (
             <Box sx={{ width: '100%' }}>
               <Typography variant="h6">{`Order #${selectedOrder.id}`}</Typography>
-              <Typography>{`Customer: ${selectedOrder.customerName}`}</Typography>
-              <Typography>{`Pickup Time: ${selectedOrder.pickupTime}`}</Typography>
+              <Typography>{`Customer: ${selectedOrder.customer_name}`}</Typography>
+              <Typography>{`Placed: ${new Date(selectedOrder.created_at).toLocaleString()}`}</Typography>
+    <Typography>{`Pickup Time: ${selectedOrder.pickup_time}`}</Typography>
               <Typography variant="subtitle1" sx={{ mt: 2 }}>Items:</Typography>
               <List>
-                {selectedOrder.items.map((item: string, index: number) => (
+                {selectedOrder.items.map((item: CartItem, index: number) => (
                   <ListItem key={index}>
-                    <ListItemText primary={item} />
+                    <ListItemText 
+                      primary={`${item.name} (x${item.quantity})`} 
+                      secondary={`$${(item.price * item.quantity).toFixed(2)}`} 
+                    />
                   </ListItem>
                 ))}
               </List>
               <Typography variant="h6">{`Total: $${selectedOrder.total.toFixed(2)}`}</Typography>
+              <Box sx={{ mt: 2 }}>
+                <Button 
+                  variant="contained" 
+                  color="primary" 
+                  onClick={() => handleStatusChange(selectedOrder.id, 'preparing')}
+                  sx={{ mr: 1 }}
+                >
+                  Mark as Preparing
+                </Button>
+                <Button 
+                  variant="contained" 
+                  color="secondary" 
+                  onClick={() => handleStatusChange(selectedOrder.id, 'ready')}
+                >
+                  Mark as Ready
+                </Button>
+              </Box>
             </Box>
           )}
         </DialogContent>

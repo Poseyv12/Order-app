@@ -22,6 +22,7 @@ import {
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { Suspense } from 'react';
 
@@ -63,6 +64,8 @@ function CheckoutContent() {
     pickupTime: '',
   });
 
+  const supabase = createClientComponentClient();
+
   useEffect(() => {
     const cartItemsParam = searchParams.get('cartItems');
     if (cartItemsParam) {
@@ -91,12 +94,27 @@ function CheckoutContent() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically process the order
-    console.log('Order submitted:', formData);
-    // Redirect to the order success page
-    router.push('/order-success');
+    const cartTotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+    try {
+      const { data, error } = await supabase.rpc('create_order_and_update_inventory', {
+        p_customer_name: formData.name,
+        p_customer_email: formData.email,
+        p_pickup_time: formData.pickupTime,
+        p_items: cartItems,
+        p_total: cartTotal
+      });
+
+      if (error) throw error;
+
+      console.log('Order submitted:', data);
+      router.push('/order-success');
+    } catch (error) {
+      console.error('Error submitting order:', error);
+      alert('There was an error submitting your order. Please try again.');
+    }
   };
 
   const cartTotal = cartItems.reduce((sum, item: CartItem) => sum + item.price * item.quantity, 0);
