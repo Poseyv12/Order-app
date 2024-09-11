@@ -13,6 +13,15 @@ import CartSidebar from './CartSidebar';
 import Footer from '../Componets/Footer';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useTheme, useMediaQuery } from '@mui/material';
+import Image from 'next/image';
+import { styled } from '@mui/material/styles';
+
+const StyledBadge = styled(Badge)(() => ({
+  '& .MuiBadge-badge': {
+    backgroundColor: 'white',
+    color: 'black',
+  },
+}));
 
 const supabase = createClientComponentClient();
 const categories = ['All Categories', 'Cakes', 'Pastries', 'Breads', 'Cookies'];
@@ -120,18 +129,28 @@ export default function MenuPageContent({ initialMenuItems }: MenuPageContentPro
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <AppBar position="static" sx={{ bgcolor: '#DB2B39' }}>
-        <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="back to home" href="/" sx={{ mr: 2, color: 'white' }}>
-            <ArrowBackIcon />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: 'white' }}>
-            Our Menu
-          </Typography>
-          <IconButton color="inherit" aria-label="cart" onClick={() => setIsCartOpen(true)} sx={{ color: 'white' }}>
-            <Badge badgeContent={totalCartItems} color="secondary">
+      <AppBar position="static" sx={{ bgcolor: '#ffc8dd' }}>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <IconButton edge="start" color="inherit" aria-label="back to home" href="/" sx={{ color: '#000000' }}>
+              <ArrowBackIcon />
+            </IconButton>
+            <Typography variant="h6" component="div" sx={{ ml: 2, color: '#000000' }}>
+              Our Menu
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1, justifyContent: 'center' }}>
+            <Image
+              src="https://fineryandcake.com/cdn/shop/files/3d-black-no-watercolor-web_300x.png?v=1628389180g"
+              alt="Bakery Logo"
+              width={100}
+              height={50}
+            />
+          </Box>
+          <IconButton color="inherit" aria-label="cart" onClick={() => setIsCartOpen(true)} sx={{ color: '#000000' }}>
+            <StyledBadge badgeContent={totalCartItems}>
               <ShoppingCartIcon />
-            </Badge>
+            </StyledBadge>
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -150,15 +169,15 @@ export default function MenuPageContent({ initialMenuItems }: MenuPageContentPro
                   selected={category === selectedCategory}
                   onClick={() => handleCategorySelect(category)}
                   sx={{
-                    bgcolor: category === selectedCategory ? '#DB2B39' : 'transparent',
+                    bgcolor: category === selectedCategory ? 'primary' : 'transparent',
                     color: category === selectedCategory ? 'white' : 'inherit',
                     '&:hover': {
-                      bgcolor: category === selectedCategory ? '#B0222D' : '#F0A1A8',
+                      bgcolor: category === selectedCategory ? '#B0222D' : '#e5e5e5',
                     },
                     '&.Mui-selected': {
-                      bgcolor: '#DB2B39',
+                      bgcolor: '#ffafcc',
                       '&:hover': {
-                        bgcolor: '#B0222D',
+                        bgcolor: '#ffc8dd',
                       },
                     },
                     padding: isMobile ? '8px 4px' : '8px 16px',
@@ -209,8 +228,7 @@ export default function MenuPageContent({ initialMenuItems }: MenuPageContentPro
         cartItems={cartItems}
         onRemoveItem={handleRemoveFromCart}
         onUpdateQuantity={handleUpdateQuantity}
-/>
-
+      />
       <Footer />
     </Box>
   );

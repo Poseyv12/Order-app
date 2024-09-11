@@ -52,7 +52,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   color: theme.palette.primary.contrastText,
   '&:hover': {
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: theme.palette.primary.light,
   },
   '&:disabled': {
     backgroundColor: theme.palette.action.disabledBackground,
@@ -183,7 +183,7 @@ const MenuItemList = ({ menuItems, onAddToCart, getAvailableQuantity }: MenuItem
                     onClick={(e) => handleAddToCart(item, e)}
                     disabled={isDisabled}
                     fullWidth
-                    sx={{ color: 'white' }}
+                    sx={{ color: 'black', backgroundColor:"#ffc8dd"}}
                   >
                     {isDisabled ? 'Sold Out' : 'Add to Cart'}
                   </StyledButton>

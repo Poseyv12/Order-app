@@ -22,6 +22,8 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { useRouter } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const theme = createTheme({
   palette: {
@@ -52,6 +54,7 @@ export default function AdminOrdersDashboard() {
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [showHidden, setShowHidden] = useState(false);
   const supabase = createClientComponentClient();
 
   const fetchOrders = useCallback(async () => {
@@ -59,14 +62,15 @@ export default function AdminOrdersDashboard() {
       const { data, error } = await supabase
         .from('orders')
         .select('*')
+        .eq('hidden', showHidden)
         .order('created_at', { ascending: false });
-  
+
       if (error) throw error;
       setOrders(data || []);
     } catch (error) {
       console.error('Error fetching orders:', error);
     }
-  }, [supabase]);
+  }, [supabase, showHidden]);
 
   useEffect(() => {
     fetchOrders();
@@ -96,6 +100,25 @@ export default function AdminOrdersDashboard() {
     }
   };
 
+  const handleHideOrder = async (orderId: number) => {
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .update({ hidden: true })
+        .eq('id', orderId);
+
+      if (error) throw error;
+      fetchOrders();
+      setSelectedOrder(null);
+    } catch (error) {
+      console.error('Error hiding order:', error);
+    }
+  };
+
+  const toggleHiddenOrders = () => {
+    setShowHidden(!showHidden);
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'new': return 'error';
@@ -113,6 +136,13 @@ export default function AdminOrdersDashboard() {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               Admin Orders Dashboard
             </Typography>
+            <Button 
+              color="inherit" 
+              startIcon={showHidden ? <VisibilityIcon /> : <VisibilityOffIcon />}
+              onClick={toggleHiddenOrders}
+            >
+              {showHidden ? 'Show Active Orders' : 'Show Hidden Orders'}
+            </Button>
             <IconButton color="inherit" onClick={() => router.push('/')}>
               <ExitToAppIcon />
             </IconButton>
@@ -165,7 +195,7 @@ export default function AdminOrdersDashboard() {
               <Typography variant="h6">{`Order #${selectedOrder.id}`}</Typography>
               <Typography>{`Customer: ${selectedOrder.customer_name}`}</Typography>
               <Typography>{`Placed: ${new Date(selectedOrder.created_at).toLocaleString()}`}</Typography>
-    <Typography>{`Pickup Time: ${selectedOrder.pickup_time}`}</Typography>
+              <Typography>{`Pickup Time: ${selectedOrder.pickup_time}`}</Typography>
               <Typography variant="subtitle1" sx={{ mt: 2 }}>Items:</Typography>
               <List>
                 {selectedOrder.items.map((item: CartItem, index: number) => (
@@ -199,6 +229,9 @@ export default function AdminOrdersDashboard() {
           )}
         </DialogContent>
         <DialogActions>
+          <Button onClick={() => handleHideOrder(selectedOrder!.id)} color="secondary">
+            Hide Order
+          </Button>
           <Button onClick={handleCloseDialog}>Close</Button>
         </DialogActions>
       </Dialog>

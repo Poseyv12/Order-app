@@ -17,7 +17,7 @@ export default function EmailList() {
 
   return (
     <Box sx={{ bgcolor: '#f5f5f5', p: 4, textAlign: 'center' }}>
-      <Typography variant="h5" gutterBottom sx={{color:'#DB2B39',fontWeight:'çbold'}}>
+      <Typography variant="h5" gutterBottom sx={{color:'#ffafcc',fontWeight:'çbold'}}>
         Subscribe to Our Newsletter
       </Typography>
       <form onSubmit={handleSubmit}>
@@ -28,7 +28,7 @@ export default function EmailList() {
           onChange={(e) => setEmail(e.target.value)}
           sx={{ mr: 1, mb: { xs: 1, sm: 0 } }}
         />
-        <Button variant="contained" type="submit" sx={{ bgcolor: '#DB2B39',color:'white',height:'56px' }}>
+        <Button variant="contained" type="submit" sx={{ bgcolor: '#ffafcc',color:'white',height:'56px' }}>
           Subscribe
         </Button>
       </form>

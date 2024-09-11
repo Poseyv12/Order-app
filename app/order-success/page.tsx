@@ -20,7 +20,7 @@ import { useRouter } from 'next/navigation';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#DB2B39',
+      main: '#ffc8dd',
     },
   },
 });
@@ -31,7 +31,7 @@ export default function OrderSuccessPage() {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-        <AppBar position="static" sx={{ bgcolor: '#DB2B39' }}>
+        <AppBar position="static" sx={{ bgcolor: '#ffc8dd' }}>
           <Toolbar>
             <IconButton
               edge="start"

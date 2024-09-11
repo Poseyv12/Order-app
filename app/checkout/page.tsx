@@ -121,7 +121,7 @@ function CheckoutContent() {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <AppBar position="static" sx={{ bgcolor: '#DB2B39' }}>
+      <AppBar position="static" sx={{ bgcolor: '#ffc8dd' }}>
         <Toolbar>
           <IconButton
             edge="start"
@@ -192,7 +192,7 @@ function CheckoutContent() {
                         type="submit"
                         variant="contained"
                         fullWidth
-                        sx={{ mt: 2, color: 'white', bgcolor: '#DB2B39', '&:hover': { bgcolor: '#B0222D' } }}
+                        sx={{ mt: 2, color: 'white', '&:hover': { bgcolor: '#ffc8dd' } }}
                       >
                         Place Order
                       </Button>

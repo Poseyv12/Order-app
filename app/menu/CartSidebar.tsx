@@ -81,7 +81,7 @@ export default function CartSidebar({ isOpen, onClose, cartItems, onRemoveItem, 
         <Button 
           variant="contained" 
           fullWidth 
-          sx={{ color: 'white', bgcolor: '#DB2B39', '&:hover': { bgcolor: '#B0222D' } }}
+          sx={{ color: 'black', backgroundColor:"#ffc8dd",'&:hover': { bgcolor: '#F0A1A8' } }}
           onClick={handleCheckout}
         >
           CHECKOUT

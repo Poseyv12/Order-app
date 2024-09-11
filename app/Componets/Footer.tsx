@@ -4,7 +4,7 @@ import { Facebook, Twitter, Instagram, YouTube } from '@mui/icons-material';
 
 export default function Footer() {
   return (
-    <Box component="footer" sx={{ bgcolor: '#DB2B39', color: 'white', py: 6, mt: 6 }}>
+    <Box component="footer" sx={{ bgcolor: '#ffc8dd', color: 'black', py: 6, mt: 6 }}>
       <Container maxWidth="lg">
         <Grid container spacing={4}>
           <Grid item xs={12} sm={4}>

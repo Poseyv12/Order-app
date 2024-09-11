@@ -91,7 +91,7 @@ export default function Home() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ type: 'spring', stiffness: 120, damping: 20 }}
-        sx={{ bgcolor: '#Dfff', color: 'black' }}>
+        sx={{ bgcolor: '#ffc8dd', color: 'black' }}>
         <Toolbar sx={{ justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Image
@@ -177,13 +177,14 @@ export default function Home() {
                 <Button 
                   variant="outlined" 
                   sx={{ 
-                    backgroundColor: 'rgba(219, 43, 57, 1)',
-                    borderColor: '#fff', 
-                    color: '#fff', 
+                    backgroundColor: '#ffafcc',
+                    borderColor: 'black', 
+                    color: 'black', 
                     borderRadius: '20px',
                     fontSize: '3rem',
                     '&:hover': {
-                      borderColor: '#B0222D',
+                      borderColor: '#ffc8dd',
+                      color:'white',
                       backgroundColor: 'rgba(219, 43, 57, 0.2)'
                     }
                   }}
@@ -196,8 +197,8 @@ export default function Home() {
           </Box>
         </Box>
 
-        <Box sx={{ bgcolor: '#DB2B39', color: 'white', py: 4, textAlign: 'center', mb: 4 }}>
-          <Typography variant="h4" component="h1" sx={{ 
+        <Box sx={{ bgcolor: '#ffc8dd', color: 'white', py: 4, textAlign: 'center', mb: 4 }}>
+          <Typography variant="h4" component="h1" sx={{ color: 'black',
             fontStyle: 'italic', 
             mb: 2,
             fontSize: { xs: '1.5rem', sm: '2.125rem' } // Smaller on mobile, default on larger screens
@@ -205,7 +206,7 @@ export default function Home() {
             Shop Our Sweet Treats & Baked Goods Online
           </Typography>
           <Typography variant="body1" sx={{
-            fontSize: { xs: '0.875rem', sm: '1rem' } // Smaller on mobile, default on larger screens
+            fontSize: { xs: '0.875rem', color:'black', sm: '1rem' } // Smaller on mobile, default on larger screens
           }}>
             View our menu and order some tasty treats today!
           </Typography>
@@ -311,7 +312,7 @@ export default function Home() {
   initial={{ y: 100 }}
   animate={{ y: 0 }}
   transition={{ type: 'spring', stiffness: 120, damping: 20 }}
-  sx={{ bgcolor: '#DB2B39', color: 'white', py: 6, mt: 6 }}
+  sx={{ bgcolor: '#ffc8dd', color: 'black', py: 6, mt: 6 }}
   >
         <Container maxWidth="lg">
           <Grid container spacing={4}>
